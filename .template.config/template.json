@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Jan Knipp",
+  "classifications": [ "Worker", "Service", ".NET", "CORE", "RabbitMQ", "Quartz.NET", "MassTransit" ], 
+  "name": ".NET Core 3 Worker Service Template for RabbitMQ",
+  "identity": "net-core3-mq-service",         
+  "groupIdentity":"net-core3-mq-service",
+  "shortName": "core3-mq-service",
+  "tags": {
+    "language": "C#",
+    "type":"project"
+  },
+  "sourceName": "Template_NET_CORE_3_WORKER",
+  "preferNameDirectory": true
+}

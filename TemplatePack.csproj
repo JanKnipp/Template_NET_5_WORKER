@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageType>Template</PackageType>
+    <PackageVersion>1.0</PackageVersion>
+    <PackageId>JanKnipp.Templates.NetCore3.Worker.RabbitMQ</PackageId>
+    <Title>Worker Template for RabbitMQ</Title>
+    <Authors>Jan Knipp</Authors>
+    <Description>Template for creating .net core 3 services for RabbitMQ</Description>
+    <PackageTags>dotnet-new;templates;worker;services;net-core;rabbitmq;quartz.net;masstransit</PackageTags>
+
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+
+    <IncludeContentInPack>true</IncludeContentInPack>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <ContentTargetFolders>content</ContentTargetFolders>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="**" Exclude="**\bin\**;**\obj\**;**\.vs\**;**\.git\**;.gitignore;LICENSE;README.md;TemplatePack.csproj">
+	<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	</Content>
+    <Compile Remove="**\*" />
+  </ItemGroup>
+
+</Project>
