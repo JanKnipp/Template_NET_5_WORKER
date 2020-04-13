@@ -16,6 +16,7 @@ namespace Template_NET_CORE_3_WORKER.CoreService
     public class Program
     {
         private static IConfigurationRoot _configuration;
+        private static readonly string HostName = Assembly.GetExecutingAssembly().GetName().Name;
 
         private static IConfigurationRoot GetConfiguration()
         {
@@ -34,20 +35,20 @@ namespace Template_NET_CORE_3_WORKER.CoreService
 
                 Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(_configuration).CreateLogger();
 
-                Log.Information("Host {State} {DateTime}", LifeTimeState.Starting, DateTimeOffset.Now);
+                Log.Information("Host {HostName} {State} {DateTime}", HostName, LifeTimeState.Starting, DateTimeOffset.Now);
                 await CreateHostBuilder(args).Build().RunAsync().ConfigureAwait(false);
 
                 return 0;
             }
             catch (Exception ex)
             {
-                Log.Fatal(ex, "Host terminated unexpectedly");
+                Log.Fatal(ex, "Host {HostName} terminated unexpectedly", HostName);
 
                 return 1;
             }
             finally
             {
-                Log.Information("Host {State} {DateTime}", LifeTimeState.Stopping, DateTimeOffset.Now);
+                Log.Information("Host {HostName} {State} {DateTime}", HostName, LifeTimeState.Stopping, DateTimeOffset.Now);
                 Log.CloseAndFlush();
             }
         }
