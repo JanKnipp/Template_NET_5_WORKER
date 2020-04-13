@@ -42,7 +42,7 @@ namespace Template_NET_CORE_3_WORKER.CoreService
             }
             catch (Exception ex)
             {
-                Log.Fatal(ex, "Host {HostName} terminated unexpectedly", HostName);
+                Log.Fatal(ex, "Host {HostName} {State} {DateTime}", HostName, LifeTimeState.Failed, DateTimeOffset.Now);
 
                 return 1;
             }
