@@ -36,11 +36,11 @@ namespace Template_NET_CORE_3_WORKER.CoreService.HostedServices
             await this._busControl.StartAsync(cancellationToken).ConfigureAwait(false);
         }
 
-        public Task StopAsync(CancellationToken cancellationToken)
+        public async Task StopAsync(CancellationToken cancellationToken)
         {
             _log.LogInformation("{State} service {ServiceName}", LifeTimeState.Stopping, this._serviceName);
 
-            return this._busControl.StopAsync(cancellationToken);
+            await this._busControl.StopAsync(cancellationToken);
         }
 
         private void OnApplicationStarted()
