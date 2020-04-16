@@ -20,4 +20,4 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet dotnet build src/Template_NET_CORE_3_WORKER.CoreService --configuration Release --no-restore
