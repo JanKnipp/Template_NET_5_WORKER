@@ -17,7 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="**" Exclude="**\bin\**;**\obj\**;**\.vs\**;**\.git\**;.gitignore;LICENSE;README.md;TemplatePack.csproj">
+    <Content Include="**" Exclude="**\bin\**;**\obj\**;**\.vs\**;**\.git\**;**\.github\**;.gitignore;LICENSE;README.md;TemplatePack.csproj">
 	<CopyToOutputDirectory>Never</CopyToOutputDirectory>
 	</Content>
     <Compile Remove="**\*" />
