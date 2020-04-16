@@ -1,5 +1,5 @@
 # Template_NET_CORE_3_WORKER
-An opinionated service worker template for creating services that communicate via RabbitMQ (or other transports) in a distributed environment.
+An opinionated service worker template for creating services that communicate via MassTransit (RabbitMQ or other transports) in a distributed environment.
 
 # Idea
 When building distributed applications certain base elements (aka. boilerplate code) are used all the time. In order to minimize work and create a consistent approach a template can improve the situation a lot.  
