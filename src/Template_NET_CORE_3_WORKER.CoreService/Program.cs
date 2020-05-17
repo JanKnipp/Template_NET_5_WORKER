@@ -6,6 +6,7 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutofacSerilogIntegration;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Template_NET_CORE_3_WORKER.CoreService.HostedServices;
@@ -68,6 +69,13 @@ namespace Template_NET_CORE_3_WORKER.CoreService
                         builder.RegisterType<SampleQuartzService>().As<IHostedService>();
 
                         builder.RegisterLogger();
+                    })
+                .ConfigureServices(collection =>
+                {
+                    collection.Configure<HostOptions>(options =>
+                    {
+                        options.ShutdownTimeout = TimeSpan.FromSeconds(15);
                     });
+                });
     }
 }
