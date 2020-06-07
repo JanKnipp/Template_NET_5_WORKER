@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace Template_NET_CORE_3_WORKER.CoreService.Models.Configuration
+﻿namespace Template_NET_CORE_3_WORKER.CoreService.Models.Configuration
 {
+    using System.Collections.Generic;
+
     public class MassTransitRabbitConfig
     {
         public MassTransitRabbitConfig()
@@ -20,5 +20,7 @@ namespace Template_NET_CORE_3_WORKER.CoreService.Models.Configuration
         public string UserName { get; set; }
 
         public string Password { get; set; }
+
+        public bool UseSSL { get; set; }
     }
 }

@@ -1,10 +1,12 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using Quartz;
-
-namespace Template_NET_CORE_3_WORKER.CoreService.QuartzJobs
+﻿namespace Template_NET_CORE_3_WORKER.CoreService.QuartzJobs
 {
+    using System;
+    using System.Threading.Tasks;
+
+    using Microsoft.Extensions.Logging;
+
+    using Quartz;
+
     [DisallowConcurrentExecution]
     internal class SampleJob : IJob
     {

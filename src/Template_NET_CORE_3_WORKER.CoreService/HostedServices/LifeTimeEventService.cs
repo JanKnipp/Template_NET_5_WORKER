@@ -1,25 +1,25 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using MassTransit;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Template_NET_CORE_3_WORKER.CoreService.Models;
-
-namespace Template_NET_CORE_3_WORKER.CoreService.HostedServices
+﻿namespace Template_NET_CORE_3_WORKER.CoreService.HostedServices
 {
+    using System;
+    using System.Threading;
+    using System.Threading.Tasks;
+
+    using Microsoft.Extensions.Hosting;
+    using Microsoft.Extensions.Logging;
+
+    using Template_NET_CORE_3_WORKER.CoreService.Models;
+
     internal class LifeTimeEventService : IHostedService
     {
         private readonly ILogger<LifeTimeEventService> _log;
         private readonly IHostApplicationLifetime _hostApplicationLifetime;
-        private readonly IBusControl _busControl;
         private readonly string _serviceName;
 
-        public LifeTimeEventService(ILogger<LifeTimeEventService> log, IHostApplicationLifetime hostApplicationLifetime, IBusControl busControl)
+        public LifeTimeEventService(ILogger<LifeTimeEventService> log, IHostApplicationLifetime hostApplicationLifetime)
         {
             this._log = log ?? throw new ArgumentNullException(nameof(log));
             this._hostApplicationLifetime = hostApplicationLifetime ?? throw new ArgumentNullException(nameof(hostApplicationLifetime));
-            this._busControl = busControl ?? throw new ArgumentNullException(nameof(busControl));
+            
             this._serviceName = this.GetType().Name;
         }
 
@@ -31,16 +31,11 @@ namespace Template_NET_CORE_3_WORKER.CoreService.HostedServices
             this._hostApplicationLifetime.ApplicationStarted.Register(this.OnApplicationStarted);
             this._hostApplicationLifetime.ApplicationStopping.Register(this.OnApplicationStopping);
             this._hostApplicationLifetime.ApplicationStopped.Register(this.OnApplicationStopped);
-
-            // initialize MassTransit
-            await this._busControl.StartAsync(cancellationToken).ConfigureAwait(false);
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)
         {
             _log.LogInformation("{State} service {ServiceName}", LifeTimeState.Stopping, this._serviceName);
-
-            await this._busControl.StopAsync(cancellationToken);
         }
 
         private void OnApplicationStarted()

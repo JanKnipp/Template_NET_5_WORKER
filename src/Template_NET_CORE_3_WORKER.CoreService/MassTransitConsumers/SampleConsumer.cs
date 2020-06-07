@@ -1,12 +1,15 @@
-﻿using System;
-using System.Threading.Tasks;
-using MassTransit;
-using Microsoft.Extensions.Logging;
-using Template_NET_CORE_3_WORKER.CoreService.Models;
-
-namespace Template_NET_CORE_3_WORKER.CoreService.MassTransitConsumers
+﻿namespace Template_NET_CORE_3_WORKER.CoreService.MassTransitConsumers
 {
-    internal class SampleConsumer : IConsumer<SampleRequest>
+    using System;
+    using System.Threading.Tasks;
+
+    using MassTransit;
+
+    using Microsoft.Extensions.Logging;
+
+    using Template_NET_CORE_3_WORKER.CoreService.Models;
+
+    public class SampleConsumer : IConsumer<SampleRequest>
     {
         private readonly ILogger<SampleConsumer> _log;
         private readonly string _consumerName;
