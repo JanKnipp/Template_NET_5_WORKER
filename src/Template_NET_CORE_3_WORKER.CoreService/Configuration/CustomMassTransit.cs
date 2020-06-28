@@ -1,4 +1,4 @@
-﻿namespace Template_NET_CORE_3_WORKER.CoreService
+﻿namespace Template_NET_CORE_3_WORKER.CoreService.Configuration
 {
     using System;
     using System.Reflection;
@@ -14,6 +14,7 @@
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Logging;
 
+    using Template_NET_CORE_3_WORKER.CoreService.Helper;
     using Template_NET_CORE_3_WORKER.CoreService.Models.Configuration;
 
     internal static class CustomMassTransit
@@ -50,8 +51,6 @@
                         configurator.AddBus(AddCustomBus);
                     });
             collection.AddMassTransitHostedService();
-
-            
 
             return collection;
         }

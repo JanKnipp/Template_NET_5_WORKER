@@ -1,4 +1,4 @@
-﻿namespace Template_NET_CORE_3_WORKER.CoreService
+﻿namespace Template_NET_CORE_3_WORKER.CoreService.Configuration
 {
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -7,6 +7,7 @@
     using Quartz.Impl;
     using Quartz.Spi;
 
+    using Template_NET_CORE_3_WORKER.CoreService.Helper;
     using Template_NET_CORE_3_WORKER.CoreService.HostedServices;
     using Template_NET_CORE_3_WORKER.CoreService.Models.Configuration;
 

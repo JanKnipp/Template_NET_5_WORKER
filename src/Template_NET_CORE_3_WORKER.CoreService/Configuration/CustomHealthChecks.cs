@@ -1,4 +1,4 @@
-﻿namespace Template_NET_CORE_3_WORKER.CoreService
+﻿namespace Template_NET_CORE_3_WORKER.CoreService.Configuration
 {
     using System;
 
@@ -6,6 +6,8 @@
     using Microsoft.AspNetCore.Diagnostics.HealthChecks;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Diagnostics.HealthChecks;
+
+    using Template_NET_CORE_3_WORKER.CoreService.Helper;
 
     public static class CustomHealthChecks
     {

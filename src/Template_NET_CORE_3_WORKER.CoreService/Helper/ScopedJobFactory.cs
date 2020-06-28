@@ -1,4 +1,4 @@
-﻿namespace Template_NET_CORE_3_WORKER.CoreService
+﻿namespace Template_NET_CORE_3_WORKER.CoreService.Helper
 {
     using System;
     using System.Collections.Concurrent;

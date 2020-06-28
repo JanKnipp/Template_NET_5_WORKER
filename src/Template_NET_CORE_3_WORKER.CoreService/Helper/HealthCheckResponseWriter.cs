@@ -1,4 +1,4 @@
-﻿namespace Template_NET_CORE_3_WORKER.CoreService
+﻿namespace Template_NET_CORE_3_WORKER.CoreService.Helper
 {
     using System.IO;
     using System.Text;
@@ -14,10 +14,7 @@
         {
             context.Response.ContentType = "application/json; charset=utf-8";
 
-            var options = new JsonWriterOptions
-                              {
-                                  Indented = true
-                              };
+            var options = new JsonWriterOptions { Indented = true };
 
             using (var stream = new MemoryStream())
             {
@@ -26,18 +23,16 @@
                     writer.WriteStartObject();
                     writer.WriteString("status", result.Status.ToString());
                     writer.WriteStartObject("results");
-                    foreach (var entry in result.Entries)
+                    foreach (var (key, value) in result.Entries)
                     {
-                        writer.WriteStartObject(entry.Key);
-                        writer.WriteString("status", entry.Value.Status.ToString());
-                        writer.WriteString("description", entry.Value.Description);
+                        writer.WriteStartObject(key);
+                        writer.WriteString("status", value.Status.ToString());
+                        writer.WriteString("description", value.Description);
                         writer.WriteStartObject("data");
-                        foreach (var item in entry.Value.Data)
+                        foreach (var (s, o) in value.Data)
                         {
-                            writer.WritePropertyName(item.Key);
-                            JsonSerializer.Serialize(
-                                writer, item.Value, item.Value?.GetType() ??
-                                                    typeof(object));
+                            writer.WritePropertyName(s);
+                            JsonSerializer.Serialize(writer, o, o?.GetType() ?? typeof(object));
                         }
                         writer.WriteEndObject();
                         writer.WriteEndObject();

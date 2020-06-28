@@ -1,0 +1,31 @@
+version: '3.4'
+
+networks:
+  Template_NET_CORE_3_WORKER.CoreService:
+
+services:
+  template_net_core_3_worker.coreservice:
+    image: ${DOCKER_REGISTRY-}templatenetcore3workercoreservice
+    build:
+      context: .
+      dockerfile: src/Template_NET_CORE_3_WORKER.CoreService/Dockerfile
+    networks:
+     - Template_NET_CORE_3_WORKER.CoreService
+  rabbitmq:
+    hostname: rabbit
+    container_name: rabbitmq
+    image: rabbitmq
+    networks:
+     - Template_NET_CORE_3_WORKER.CoreService
+    ports:
+     - "5672:5672"
+     - "15672:15672"
+     - "15692:15692"
+    healthcheck:
+        timeout: 5s
+        interval: 5s
+        retries: 10
+        test:
+          - "CMD"
+          - "rabbitmqctl"
+          - "status" 

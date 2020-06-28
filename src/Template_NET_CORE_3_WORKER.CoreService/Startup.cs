@@ -10,6 +10,7 @@
 
     using Prometheus;
 
+    using Template_NET_CORE_3_WORKER.CoreService.Configuration;
     using Template_NET_CORE_3_WORKER.CoreService.HostedServices;
 
     public class Startup
