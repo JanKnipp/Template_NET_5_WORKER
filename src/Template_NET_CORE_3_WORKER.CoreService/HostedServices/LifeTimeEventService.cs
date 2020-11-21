@@ -25,7 +25,7 @@
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            _log.LogInformation("{State} service {ServiceName}", LifeTimeState.Starting, this._serviceName);
+            this._log.LogInformation("{State} service {ServiceName}", LifeTimeState.Starting, this._serviceName);
 
             // setup lifetime events
             this._hostApplicationLifetime.ApplicationStarted.Register(this.OnApplicationStarted);
@@ -35,7 +35,7 @@
 
         public async Task StopAsync(CancellationToken cancellationToken)
         {
-            _log.LogInformation("{State} service {ServiceName}", LifeTimeState.Stopping, this._serviceName);
+            this._log.LogInformation("{State} service {ServiceName}", LifeTimeState.Stopping, this._serviceName);
         }
 
         private void OnApplicationStarted()

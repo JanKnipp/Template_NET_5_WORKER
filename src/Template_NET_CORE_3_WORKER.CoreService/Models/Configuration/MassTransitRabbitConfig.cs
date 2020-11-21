@@ -15,7 +15,7 @@
 
         public string VirtualHost { get; set; }
 
-        public List<string> ClusterNodes { get; set; }
+        public IList<string> ClusterNodes { get; set; }
 
         public string UserName { get; set; }
 

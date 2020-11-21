@@ -34,9 +34,11 @@
                             writer.WritePropertyName(s);
                             JsonSerializer.Serialize(writer, o, o?.GetType() ?? typeof(object));
                         }
+
                         writer.WriteEndObject();
                         writer.WriteEndObject();
                     }
+
                     writer.WriteEndObject();
                     writer.WriteEndObject();
                 }

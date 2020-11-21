@@ -15,6 +15,15 @@
     {
         internal static IServiceCollection AddCustomQuartz(this IServiceCollection collection)
         {
+            collection.AddQuartz(
+                configurator =>
+                    {
+                        configurator.UseMicrosoftDependencyInjectionJobFactory(
+                            options => options.AllowDefaultConstructor = true);
+                    });
+
+            collection.AddQuartzServer(options => { options.WaitForJobsToComplete = true; });
+
             collection.AddSingleton<SampleQuartzServiceOptions>(
                 x =>
                     {

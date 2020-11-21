@@ -1,5 +1,6 @@
 ﻿namespace Template_NET_CORE_3_WORKER.CoreService.Helper
 {
+    using System;
     using System.Text.RegularExpressions;
 
     using MassTransit;
@@ -7,7 +8,7 @@
 
     public class CustomEndpointNameFormatter : DefaultEndpointNameFormatter
     {
-        private static readonly Regex _pattern = new Regex("(?<=[a-z0-9])[A-Z]", RegexOptions.Compiled);
+        private static readonly Regex _pattern = new Regex("(?<=[a-z0-9])[A-Z]", RegexOptions.Compiled, TimeSpan.FromSeconds(1));
         private readonly string _separator;
         private readonly string _prefix;
 

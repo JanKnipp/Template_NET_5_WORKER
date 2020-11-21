@@ -7,14 +7,20 @@
     using GreenPipes;
 
     using MassTransit;
+    using MassTransit.Conductor;
     using MassTransit.Context;
+    using MassTransit.Definition;
+    using MassTransit.PrometheusIntegration;
+    using MassTransit.RabbitMqTransport;
 
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Logging;
 
-    using Template_NET_CORE_3_WORKER.CoreService.Helper;
+    using Template_NET_CORE_3_WORKER.Components;
+    using Template_NET_CORE_3_WORKER.Components.MassTransit.Activities;
+    using Template_NET_CORE_3_WORKER.Components.MassTransit.StateMachines;
     using Template_NET_CORE_3_WORKER.CoreService.Models.Configuration;
 
     internal static class CustomMassTransit
@@ -32,7 +38,8 @@
 
             LogContext.ConfigureCurrentLogContext(loggerFactory);
 
-            collection.TryAddSingleton(CustomEndpointNameFormatter.Instance);
+            collection.TryAddSingleton(KebabCaseEndpointNameFormatter.Instance);
+            collection.TryAddScoped<RequestOfferActivity>();
 
             collection.AddSingleton<MassTransitRabbitConfig>(
                 x =>
@@ -46,53 +53,89 @@
             collection.AddMassTransit(
                 configurator =>
                     {
-                        configurator.AddConsumers(Assembly.GetExecutingAssembly());
+                        configurator.AddRabbitMqMessageScheduler();
 
-                        configurator.AddBus(AddCustomBus);
+                        configurator.AddConsumersFromNamespaceContaining<IComponents>();
+                        configurator.AddSagasFromNamespaceContaining<IComponents>();
+                        configurator.AddSagaStateMachinesFromNamespaceContaining<IComponents>();
+                        configurator.AddActivitiesFromNamespaceContaining<IComponents>();
+
+                        configurator
+                            .AddSagaStateMachine<OfferStateMachine, OfferState>(typeof(OfferStateMachineDefinition))
+                            .MongoDbRepository(
+                                repositoryConfigurator =>
+                                    {
+                                        repositoryConfigurator.Connection = "mongodb://mongo";
+                                        repositoryConfigurator.DatabaseName = "offer";
+                                    });
+
+                        configurator.AddServiceClient();
+
+                        configurator.UsingRabbitMq(ConfigureRabbitMq);
                     });
+
             collection.AddMassTransitHostedService();
 
             return collection;
         }
 
-        private static IBusControl AddCustomBus(IRegistrationContext<IServiceProvider> registrationContext)
+        private static void ConfigureRabbitMq(IBusRegistrationContext context, IRabbitMqBusFactoryConfigurator configurator)
         {
-            var massTransitRabbitConfig = registrationContext.Container.GetService<MassTransitRabbitConfig>();
+            var massTransitRabbitConfig = context.GetService<MassTransitRabbitConfig>();
 
-            var busControl = Bus.Factory.CreateUsingRabbitMq(
-                configurator =>
+            configurator.UseHealthCheck(context);
+           
+            var clusterInternalName = massTransitRabbitConfig.ClusterName;
+            var virtualHost = massTransitRabbitConfig.VirtualHost;
+            var connectionName =
+                $"{Assembly.GetEntryAssembly()?.GetName().Name} ({Environment.MachineName})";
+            configurator.Host(
+                new UriBuilder("rabbitmq", clusterInternalName, massTransitRabbitConfig.ClusterPort, virtualHost)
+                    .Uri,
+                connectionName,
+                hostConfigurator =>
                     {
-                        configurator.UseHealthCheck(registrationContext);
-
-                        var clusterInternalName = massTransitRabbitConfig.ClusterName;
-                        var vHost = massTransitRabbitConfig.VirtualHost;
-                        var connectionName =
-                            $"{Assembly.GetEntryAssembly()?.GetName().Name} ({Environment.MachineName})";
-                        var host = configurator.Host(
-                            new UriBuilder("rabbitmq", clusterInternalName, massTransitRabbitConfig.ClusterPort, vHost)
-                                .Uri,
-                            connectionName,
-                            hostConfigurator =>
+                        hostConfigurator.Username(massTransitRabbitConfig.UserName);
+                        hostConfigurator.Password(massTransitRabbitConfig.Password);
+                        hostConfigurator.PublisherConfirmation = true;
+                        hostConfigurator.UseCluster(
+                            cluster =>
                                 {
-                                    hostConfigurator.Username(massTransitRabbitConfig.UserName);
-                                    hostConfigurator.Password(massTransitRabbitConfig.Password);
-                                    hostConfigurator.PublisherConfirmation = true;
-                                    hostConfigurator.UseCluster(
-                                        cluster => { massTransitRabbitConfig.ClusterNodes.ForEach(cluster.Node); });
-                                    if (massTransitRabbitConfig.UseSSL)
+                                    
+                                    foreach (var node in massTransitRabbitConfig.ClusterNodes)
                                     {
-                                        hostConfigurator.UseSsl(sslConfigurator => sslConfigurator.Protocol = SslProtocols.None);
+                                        cluster.Node(node);
                                     }
                                 });
-                        configurator.UseRetry(
-                            retryConfig => retryConfig.Exponential(
-                                5,
-                                TimeSpan.FromMilliseconds(200),
-                                TimeSpan.FromSeconds(60),
-                                TimeSpan.FromSeconds(1)));
-                        configurator.ConfigureEndpoints(registrationContext);
+                        if (massTransitRabbitConfig.UseSSL)
+                        {
+                            hostConfigurator.UseSsl(sslConfigurator => sslConfigurator.Protocol = SslProtocols.None);
+                        }
                     });
-            return busControl;
+
+            configurator.UseRabbitMqMessageScheduler();
+            
+            configurator.UseRetry(
+                retryConfig => retryConfig.Exponential(
+                    5,
+                    TimeSpan.FromMilliseconds(200),
+                    TimeSpan.FromSeconds(60),
+                    TimeSpan.FromSeconds(1)));
+
+            configurator.UsePrometheusMetrics(
+                options =>
+                    {
+                        // options.ServiceNameLabel = Assembly.GetEntryAssembly()?.GetName().Name;
+                    });
+
+            var serviceInstanceOptions = new ServiceInstanceOptions()
+                .EnableInstanceEndpoint()
+                .EnableJobServiceEndpoints()
+                .SetEndpointNameFormatter(KebabCaseEndpointNameFormatter.Instance);
+
+            configurator.ConfigureServiceEndpoints(context, serviceInstanceOptions);
+
+            // configurator.ConfigureEndpoints(context);
         }
     }
 }

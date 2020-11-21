@@ -14,7 +14,7 @@ services:
   rabbitmq:
     hostname: rabbit
     container_name: rabbitmq
-    image: rabbitmq
+    image: rabbitmq:management-alpine
     networks:
      - Template_NET_CORE_3_WORKER.CoreService
     ports:
@@ -29,3 +29,11 @@ services:
           - "CMD"
           - "rabbitmqctl"
           - "status" 
+  mongo:
+    container_name: mongo
+    image: mongo:latest
+    restart: always
+    networks:
+      - Template_NET_CORE_3_WORKER.CoreService
+    ports:
+      - '27017-27019:27017-27019'

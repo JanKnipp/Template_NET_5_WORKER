@@ -10,6 +10,8 @@
 
     using Prometheus;
 
+    using Quartz;
+
     using Template_NET_CORE_3_WORKER.CoreService.Configuration;
     using Template_NET_CORE_3_WORKER.CoreService.HostedServices;
 
@@ -32,16 +34,17 @@
 
             services.Configure<HostOptions>(options => { options.ShutdownTimeout = TimeSpan.FromSeconds(15); });
 
+            services.AddCustomJaeger();
+            services.AddOpenTracing();
             services.AddCustomHealthChecks();
-            services.AddCustomQuartz();
             services.AddCustomMassTransit();
+            services.AddCustomQuartz();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         private void Configure(IApplicationBuilder app, IHostApplicationLifetime applicationLifetime)
         {
             app.UseCustomHealthChecks();
-
             app.UseMetricServer();
         }
 
