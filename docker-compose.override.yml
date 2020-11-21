@@ -1,7 +1,7 @@
 version: '3.4'
 
 services:
-  template_net_core_3_worker.coreservice:
+  Template_NET_5_worker.coreservice:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80

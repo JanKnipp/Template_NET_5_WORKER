@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MassTransit" Version="7.0.6" />
+    <PackageReference Include="MassTransit.Analyzers" Version="7.0.6" />
+    <PackageReference Include="MassTransit.MongoDb" Version="7.0.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Template_NET_5_WORKER.Contracts\Template_NET_5_WORKER.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

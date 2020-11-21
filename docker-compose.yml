@@ -1,22 +1,22 @@
 version: '3.4'
 
 networks:
-  Template_NET_CORE_3_WORKER.CoreService:
+  Template_NET_5_WORKER.CoreService:
 
 services:
-  template_net_core_3_worker.coreservice:
+  Template_NET_5_worker.coreservice:
     image: ${DOCKER_REGISTRY-}templatenetcore3workercoreservice
     build:
       context: .
-      dockerfile: src/Template_NET_CORE_3_WORKER.CoreService/Dockerfile
+      dockerfile: src/Template_NET_5_WORKER.CoreService/Dockerfile
     networks:
-     - Template_NET_CORE_3_WORKER.CoreService
+     - Template_NET_5_WORKER.CoreService
   rabbitmq:
     hostname: rabbit
     container_name: rabbitmq
     image: rabbitmq:management-alpine
     networks:
-     - Template_NET_CORE_3_WORKER.CoreService
+     - Template_NET_5_WORKER.CoreService
     ports:
      - "5672:5672"
      - "15672:15672"
@@ -34,6 +34,6 @@ services:
     image: mongo:latest
     restart: always
     networks:
-      - Template_NET_CORE_3_WORKER.CoreService
+      - Template_NET_5_WORKER.CoreService
     ports:
       - '27017-27019:27017-27019'
