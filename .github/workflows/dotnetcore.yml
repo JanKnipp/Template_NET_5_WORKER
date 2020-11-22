@@ -13,11 +13,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Setup .NET Core
+    - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.101
+        dotnet-version: 5.0.100
     - name: Install dependencies
-      run: dotnet restore src/Template_NET_CORE_3_WORKER.CoreService
+      run: dotnet restore src/Template_NET_5_WORKER.CoreService
     - name: Build
-      run: dotnet build src/Template_NET_CORE_3_WORKER.CoreService --configuration Release --no-restore
+      run: dotnet build src/Template_NET_5_WORKER.CoreService --configuration Release --no-restore
