@@ -15,7 +15,7 @@
 
     public class Program
     {
-        private static readonly string HostName = Assembly.GetExecutingAssembly().GetName().Name;
+        private static readonly string HostAssemblyName = Assembly.GetExecutingAssembly().GetName().Name;
         private static IConfigurationRoot _configuration;
 
         private static IConfigurationRoot GetConfiguration(string[] args)
@@ -40,20 +40,20 @@
 
                 Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(_configuration).CreateLogger();
 
-                Log.Information("Host {HostName} {State} {DateTime}", HostName, LifeTimeState.Starting, DateTimeOffset.Now);
+                Log.Information("Host {HostName} {State} {DateTime}", HostAssemblyName, LifeTimeState.Starting, DateTimeOffset.Now);
                 await CreateHostBuilder(args).Build().RunAsync().ConfigureAwait(false);
 
                 return 0;
             }
             catch (Exception ex)
             {
-                Log.Fatal(ex, "Host {HostName} {State} {DateTime}", HostName, LifeTimeState.Failed, DateTimeOffset.Now);
+                Log.Fatal(ex, "Host {HostName} {State} {DateTime}", HostAssemblyName, LifeTimeState.Failed, DateTimeOffset.Now);
 
                 return 1;
             }
             finally
             {
-                Log.Information("Host {HostName} {State} {DateTime}", HostName, LifeTimeState.Stopping, DateTimeOffset.Now);
+                Log.Information("Host {HostName} {State} {DateTime}", HostAssemblyName, LifeTimeState.Stopping, DateTimeOffset.Now);
                 Log.CloseAndFlush();
             }
         }

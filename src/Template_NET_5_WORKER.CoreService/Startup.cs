@@ -4,13 +4,10 @@
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Server.Kestrel.Core;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
-
-    using Prometheus;
-
-    using Quartz;
 
     using Template_NET_5_WORKER.CoreService.Configuration;
     using Template_NET_5_WORKER.CoreService.HostedServices;
@@ -33,9 +30,9 @@
             services.AddHostedService<LifeTimeEventService>();
 
             services.Configure<HostOptions>(options => { options.ShutdownTimeout = TimeSpan.FromSeconds(15); });
+            services.Configure<KestrelServerOptions>(this._configuration.GetSection("Kestrel"));
 
-            services.AddCustomJaeger();
-            services.AddOpenTracing();
+            services.AddCustomOpenTelemetry();
             services.AddCustomHealthChecks();
             services.AddCustomMassTransit();
             services.AddCustomQuartz();
@@ -45,7 +42,6 @@
         private void Configure(IApplicationBuilder app, IHostApplicationLifetime applicationLifetime)
         {
             app.UseCustomHealthChecks();
-            app.UseMetricServer();
         }
 
         /// <summary>

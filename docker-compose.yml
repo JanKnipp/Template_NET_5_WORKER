@@ -5,7 +5,7 @@ networks:
 
 services:
   Template_NET_5_worker.coreservice:
-    image: ${DOCKER_REGISTRY-}templatenetcore3workercoreservice
+    image: ${DOCKER_REGISTRY-}templatenet5workercoreservice
     build:
       context: .
       dockerfile: src/Template_NET_5_WORKER.CoreService/Dockerfile

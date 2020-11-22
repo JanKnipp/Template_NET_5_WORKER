@@ -10,7 +10,6 @@
     using MassTransit.Conductor;
     using MassTransit.Context;
     using MassTransit.Definition;
-    using MassTransit.PrometheusIntegration;
     using MassTransit.RabbitMqTransport;
 
     using Microsoft.Extensions.Configuration;
@@ -121,12 +120,6 @@
                     TimeSpan.FromMilliseconds(200),
                     TimeSpan.FromSeconds(60),
                     TimeSpan.FromSeconds(1)));
-
-            configurator.UsePrometheusMetrics(
-                options =>
-                    {
-                        // options.ServiceNameLabel = Assembly.GetEntryAssembly()?.GetName().Name;
-                    });
 
             var serviceInstanceOptions = new ServiceInstanceOptions()
                 .EnableInstanceEndpoint()
