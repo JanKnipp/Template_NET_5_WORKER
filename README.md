@@ -1,10 +1,10 @@
-# Template_NET_CORE_3_WORKER
+# Template_NET_5_WORKER
 An opinionated service worker template for creating services that communicate via MassTransit (RabbitMQ or other transports) in a distributed environment.
 
 # Build Status
 Branch | Status
 --- | :---:
-master | ![.NET Core](https://github.com/JanKnipp/Template_NET_CORE_3_WORKER/workflows/.NET%20Core/badge.svg?branch=master)
+master | ![.NET Core](https://github.com/JanKnipp/Template_NET_5_WORKER/workflows/.NET%20Core/badge.svg?branch=master)
 
 # Idea
 When building distributed applications certain base elements (aka. boilerplate code) are used all the time. In order to minimize work and create a consistent approach a template can improve the situation a lot.  
@@ -16,13 +16,13 @@ MassTransit is used to create an abstraction to RabbitMQ, which gives us the abi
 
 # Used Tools & Frameworks
 
-* [.NET Core 3.1](https://dotnet.microsoft.com/download/dotnet-core)
-* [Autofac](https://autofac.org/) | Dependency Injection Framework
+* [.NET 5.0](https://dotnet.microsoft.com/download/dotnet/5.0)
 * [Serilog](https://serilog.net/) | Logging Framework
 * [MassTransit](https://masstransit-project.com/) | Distributed Application Framework
 * [Quartz.NET](https://www.quartz-scheduler.net/) | Job Scheduler
 * [xUnit](https://xunit.net/) and [Moq](https://github.com/Moq/moq4/wiki/Quickstart) | Unit testing
 * [RabbitMQ](https://www.rabbitmq.com/) | Message Broker
+* [OpenTelemetry](https://opentelemetry.io/) | Telemetry
 
 The project uses additional nuget packages that extend the functionality of the above mentioned packages and allow all packages to interact and work together within the solution.
 
@@ -31,7 +31,7 @@ The project uses additional nuget packages that extend the functionality of the 
 │   App.config
 │   appsettings.json
 │   Program.cs
-│   Template_NET_CORE_3_WORKER.CoreService.csproj
+│   Template_NET_5_WORKER.CoreService.csproj
 │
 ├───AutofacModules
 │       MassTransitRabbitModule.cs
@@ -78,7 +78,7 @@ Use the [dotnet new -i|--install] command to install a package.
 Use the NuGet package identifier to install a template package.
 
 ```dotnetcli
-dotnet new -i JanKnipp.Templates.NetCore3.Worker.RabbitMQ
+dotnet new -i JanKnipp.Templates.Net5.Worker.RabbitMQ
 ```
 
 ### To install template from a local nupkg file
@@ -86,7 +86,7 @@ dotnet new -i JanKnipp.Templates.NetCore3.Worker.RabbitMQ
 Provide the path to JanKnipp.Templates.NetCore3.Worker.RabbitMQ.*.nupkg NuGet package file. Please specify the exact file name of the version you want to install.
 
 ```dotnetcli
-dotnet new -i JanKnipp.Templates.NetCore3.Worker.RabbitMQ.1.0.0.nupkg
+dotnet new -i JanKnipp.Templates.Net5.Worker.RabbitMQ.1.0.0.nupkg
 ```
 
 ## Uninstalling template
@@ -96,7 +96,7 @@ Use the [dotnet new -u|--uninstall] command to uninstall package.
 If the package was installed by either a NuGet feed or by a *.nupkg* file directly, provide the identifier.
 
 ```dotnetcli
-dotnet new -u JanKnipp.Templates.NetCore3.Worker.RabbitMQ
+dotnet new -u JanKnipp.Templates.Net5.Worker.RabbitMQ
 ```
 
 ## Create a project using a custom template
@@ -104,5 +104,5 @@ dotnet new -u JanKnipp.Templates.NetCore3.Worker.RabbitMQ
 After the template is installed, use the template by executing the `dotnet new core3-mq-service` command as you would with any other pre-installed template. In order to change the solution/project name supply the name paramater `-n` and a name for the service. If you do not provide a name the template will automatically select the name of the folder in which the `dotnet new` command has been executed in as the name of the solution.
 
 ```dotnetcli
-dotnet new core3-mq-service -n MyCustomName
+dotnet new net5-mq-service -n MyCustomName
 ```
