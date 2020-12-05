@@ -6,10 +6,10 @@
     <PackageId>JanKnipp.Templates.NetCore3.Worker.RabbitMQ</PackageId>
     <Title>Worker Template for RabbitMQ</Title>
     <Authors>Jan Knipp</Authors>
-    <Description>Template for creating .net core 3 services for RabbitMQ</Description>
+    <Description>Template for creating .net 5 services for RabbitMQ</Description>
     <PackageTags>dotnet-new;templates;worker;services;net-core;rabbitmq;quartz.net;masstransit</PackageTags>
 
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
 
     <IncludeContentInPack>true</IncludeContentInPack>
     <IncludeBuildOutput>false</IncludeBuildOutput>
