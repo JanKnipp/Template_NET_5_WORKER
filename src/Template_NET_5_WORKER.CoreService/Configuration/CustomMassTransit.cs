@@ -12,6 +12,7 @@
     using MassTransit.Definition;
     using MassTransit.RabbitMqTransport;
 
+    using Microsoft.AspNetCore.Builder;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -31,11 +32,6 @@
                 throw new ArgumentNullException(nameof(collection));
             }
 
-            var serviceProvider = collection.BuildServiceProvider();
-
-            var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
-
-            LogContext.ConfigureCurrentLogContext(loggerFactory);
 
             collection.TryAddSingleton(KebabCaseEndpointNameFormatter.Instance);
             collection.TryAddScoped<RequestOfferActivity>();
@@ -76,6 +72,15 @@
             collection.AddMassTransitHostedService();
 
             return collection;
+        }
+
+        public static IApplicationBuilder UseCustomMassTransit(this IApplicationBuilder app)
+        {
+            var loggerFactory = app.ApplicationServices.GetService<LoggerFactory>();
+
+            LogContext.ConfigureCurrentLogContext(loggerFactory);
+
+            return app;
         }
 
         private static void ConfigureRabbitMq(IBusRegistrationContext context, IRabbitMqBusFactoryConfigurator configurator)

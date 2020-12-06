@@ -29,7 +29,7 @@
         {
             services.AddHostedService<LifeTimeEventService>();
 
-            services.Configure<HostOptions>(options => { options.ShutdownTimeout = TimeSpan.FromSeconds(15); });
+            services.Configure<HostOptions>(options => { options.ShutdownTimeout = TimeSpan.FromSeconds(30); });
             services.Configure<KestrelServerOptions>(this._configuration.GetSection("Kestrel"));
 
             services.AddCustomOpenTelemetry();
@@ -42,6 +42,7 @@
         private void Configure(IApplicationBuilder app, IHostApplicationLifetime applicationLifetime)
         {
             app.UseCustomHealthChecks();
+            app.UseCustomMassTransit();
         }
 
         /// <summary>

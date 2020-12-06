@@ -25,11 +25,8 @@
 
             return collection;
         }
-    }
 
-    public static class ServiceCollectionQuartzConfiguratorExtensions
-    {
-        public static void AddJobAndTrigger<T>(
+        private static void AddJobAndTrigger<T>(
             this IServiceCollectionQuartzConfigurator quartz,
             IConfiguration config)
             where T : IJob
@@ -38,8 +35,8 @@
             const string GroupName = "Template_NET_5_Worker";
 
             var jobName = typeof(T).Name;
-            
-            var quartzJobConfiguration = config.GetSection(QuartzConfig)?.GetSection(jobName)?.Get<IQuartzJobConfiguration>();
+
+            var quartzJobConfiguration = config.GetSection(QuartzConfig)?.GetSection(jobName)?.Get<QuartzJobConfiguration>();
 
             if (string.IsNullOrEmpty(quartzJobConfiguration?.CronConfig))
             {
