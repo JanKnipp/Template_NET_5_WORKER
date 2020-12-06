@@ -35,7 +35,7 @@
             services.AddCustomOpenTelemetry();
             services.AddCustomHealthChecks();
             services.AddCustomMassTransit();
-            services.AddCustomQuartz();
+            services.AddCustomQuartz(this._configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

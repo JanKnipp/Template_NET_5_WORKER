@@ -4,41 +4,62 @@
     using Microsoft.Extensions.DependencyInjection;
 
     using Quartz;
-    using Quartz.Impl;
-    using Quartz.Spi;
 
-    using Template_NET_5_WORKER.CoreService.Helper;
-    using Template_NET_5_WORKER.CoreService.HostedServices;
     using Template_NET_5_WORKER.CoreService.Models.Configuration;
+    using Template_NET_5_WORKER.CoreService.QuartzJobs;
 
     internal static class CustomQuartz
     {
-        internal static IServiceCollection AddCustomQuartz(this IServiceCollection collection)
+        internal static IServiceCollection AddCustomQuartz(this IServiceCollection collection, IConfiguration configuration)
         {
             collection.AddQuartz(
                 configurator =>
                     {
-                        configurator.UseMicrosoftDependencyInjectionJobFactory(
-                            options => options.AllowDefaultConstructor = true);
+                        configurator.UseMicrosoftDependencyInjectionScopedJobFactory();
+
+                        configurator.AddJobAndTrigger<SampleJob>(configuration);
                     });
 
-            collection.AddQuartzServer(options => { options.WaitForJobsToComplete = true; });
 
-            collection.AddSingleton<SampleQuartzServiceOptions>(
-                x =>
-                    {
-                        var config = x.GetService<IConfiguration>();
-
-                        return config.GetSection(nameof(SampleQuartzServiceOptions)).Get<SampleQuartzServiceOptions>()
-                               ?? new SampleQuartzServiceOptions();
-                    });
-
-            collection.AddSingleton<ISchedulerFactory>(new StdSchedulerFactory());
-            collection.AddSingleton<IJobFactory, ScopedJobFactory>();
-
-            collection.AddHostedService<SampleQuartzService>();
+            collection.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
 
             return collection;
+        }
+    }
+
+    public static class ServiceCollectionQuartzConfiguratorExtensions
+    {
+        public static void AddJobAndTrigger<T>(
+            this IServiceCollectionQuartzConfigurator quartz,
+            IConfiguration config)
+            where T : IJob
+        {
+            const string QuartzConfig = "Quartz";
+            const string GroupName = "Template_NET_5_Worker";
+
+            var jobName = typeof(T).Name;
+            
+            var quartzJobConfiguration = config.GetSection(QuartzConfig)?.GetSection(jobName)?.Get<IQuartzJobConfiguration>();
+
+            if (string.IsNullOrEmpty(quartzJobConfiguration?.CronConfig))
+            {
+                Serilog.Log.Warning("CronConfig for {JobName} not configured, Job will not be configured!", jobName);
+                return;
+            }
+
+            if (!CronExpression.IsValidExpression(quartzJobConfiguration?.CronConfig))
+            {
+                Serilog.Log.Warning("CronConfig for {JobName} is invalid, Job will not be configured!", jobName);
+                return;
+            }
+
+            var jobKey = new JobKey(jobName, GroupName);
+
+            quartz.AddJob<T>(configurator => configurator.WithIdentity(jobKey));
+            quartz.AddTrigger(
+                configurator => configurator.ForJob(jobKey)
+                    .WithCronSchedule(quartzJobConfiguration?.CronConfig)
+                    .WithIdentity($"{jobName}Trigger"));
         }
     }
 }

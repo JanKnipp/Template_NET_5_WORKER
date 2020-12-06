@@ -22,6 +22,7 @@
 
         private readonly string _jobName;
 
+
         public SampleJob(ILogger<SampleJob> log, ISendEndpointProvider sendEndpointProvider, IPublishEndpoint publishEndpoint)
         {
             this._log = log ?? throw new ArgumentNullException(nameof(log));
