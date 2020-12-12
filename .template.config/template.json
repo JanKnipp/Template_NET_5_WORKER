@@ -11,5 +11,6 @@
     "type":"project"
   },
   "sourceName": "Template_NET_CORE_5_WORKER",
+  "defaultName": "WorkerService",
   "preferNameDirectory": true
 }

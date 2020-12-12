@@ -3,7 +3,7 @@
   <PropertyGroup>
     <PackageType>Template</PackageType>
     <PackageVersion>1.0</PackageVersion>
-    <PackageId>JanKnipp.Templates.NetCore3.Worker.RabbitMQ</PackageId>
+    <PackageId>JanKnipp.Templates.Net5.Worker.RabbitMQ</PackageId>
     <Title>Worker Template for RabbitMQ</Title>
     <Authors>Jan Knipp</Authors>
     <Description>Template for creating .net 5 services for RabbitMQ</Description>
@@ -17,7 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="**" Exclude="**\bin\**;**\obj\**;**\.vs\**;**\.git\**;**\.github\**;.gitignore;LICENSE;README.md;TemplatePack.csproj">
+    <Content Include="**" Exclude="**\bin\**;**\obj\**;**\.vs\**;**\.git\**;**\.github\**;.gitignore;LICENSE;README.md;TemplatePack.csproj;**\.template.config\**;**\*DotSettings.user">
 	<CopyToOutputDirectory>Never</CopyToOutputDirectory>
 	</Content>
     <Compile Remove="**\*" />
