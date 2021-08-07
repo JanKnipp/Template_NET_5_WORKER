@@ -8,7 +8,6 @@
 
     public class OfferConsumerDefinition : ConsumerDefinition<OfferConsumer>
     {
-
         public OfferConsumerDefinition()
         {
             this.ConcurrentMessageLimit = 10;

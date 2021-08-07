@@ -15,11 +15,10 @@
             collection.AddQuartz(
                 configurator =>
                     {
-                        configurator.UseMicrosoftDependencyInjectionScopedJobFactory();
+                        configurator.UseMicrosoftDependencyInjectionJobFactory();
 
                         configurator.AddJobAndTrigger<SampleJob>(configuration);
                     });
-
 
             collection.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
 

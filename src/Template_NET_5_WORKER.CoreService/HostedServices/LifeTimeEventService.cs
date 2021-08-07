@@ -19,7 +19,7 @@
         {
             this._log = log ?? throw new ArgumentNullException(nameof(log));
             this._hostApplicationLifetime = hostApplicationLifetime ?? throw new ArgumentNullException(nameof(hostApplicationLifetime));
-            
+
             this._serviceName = this.GetType().Name;
         }
 

@@ -9,10 +9,10 @@
         public static IServiceCollection AddCustomOpenTelemetry(this IServiceCollection collection)
         {
             return collection.AddOpenTelemetryTracing(
-                (provider, builder) =>
+                (builder) =>
                     {
                         builder.AddAspNetCoreInstrumentation();
-                        builder.AddConsoleExporter();
+                        builder.AddOtlpExporter();
                     });
         }
     }

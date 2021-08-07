@@ -1,4 +1,6 @@
-﻿namespace Template_NET_5_WORKER.CoreService.Configuration
+﻿using MassTransit.JobService.Configuration;
+
+namespace Template_NET_5_WORKER.CoreService.Configuration
 {
     using System;
     using System.Reflection;
@@ -7,7 +9,6 @@
     using GreenPipes;
 
     using MassTransit;
-    using MassTransit.Conductor;
     using MassTransit.Context;
     using MassTransit.Definition;
     using MassTransit.RabbitMqTransport;
@@ -32,7 +33,6 @@
                 throw new ArgumentNullException(nameof(collection));
             }
 
-
             collection.TryAddSingleton(KebabCaseEndpointNameFormatter.Instance);
             collection.TryAddScoped<RequestOfferActivity>();
 
@@ -41,14 +41,14 @@
                     {
                         var config = x.GetService<IConfiguration>();
 
-                        return config.GetSection(nameof(MassTransitRabbitConfig)).Get<MassTransitRabbitConfig>()
+                        return config?.GetSection(nameof(MassTransitRabbitConfig)).Get<MassTransitRabbitConfig>()
                                ?? new MassTransitRabbitConfig();
                     });
 
             collection.AddMassTransit(
                 configurator =>
                     {
-                        configurator.AddRabbitMqMessageScheduler();
+                        configurator.AddDelayedMessageScheduler();
 
                         configurator.AddConsumersFromNamespaceContaining<IComponents>();
                         configurator.AddSagasFromNamespaceContaining<IComponents>();
@@ -64,12 +64,10 @@
                                         repositoryConfigurator.DatabaseName = "offer";
                                     });
 
-                        configurator.AddServiceClient();
-
                         configurator.UsingRabbitMq(ConfigureRabbitMq);
                     });
 
-            collection.AddMassTransitHostedService();
+            collection.AddMassTransitHostedService(true);
 
             return collection;
         }
@@ -87,8 +85,6 @@
         {
             var massTransitRabbitConfig = context.GetService<MassTransitRabbitConfig>();
 
-            configurator.UseHealthCheck(context);
-           
             var clusterInternalName = massTransitRabbitConfig.ClusterName;
             var virtualHost = massTransitRabbitConfig.VirtualHost;
             var connectionName =
@@ -105,7 +101,6 @@
                         hostConfigurator.UseCluster(
                             cluster =>
                                 {
-                                    
                                     foreach (var node in massTransitRabbitConfig.ClusterNodes)
                                     {
                                         cluster.Node(node);
@@ -117,8 +112,10 @@
                         }
                     });
 
-            configurator.UseRabbitMqMessageScheduler();
-            
+            configurator.UseDelayedMessageScheduler();
+
+            configurator.UseSerilogEnricher();
+
             configurator.UseRetry(
                 retryConfig => retryConfig.Exponential(
                     5,
@@ -127,7 +124,6 @@
                     TimeSpan.FromSeconds(1)));
 
             var serviceInstanceOptions = new ServiceInstanceOptions()
-                .EnableInstanceEndpoint()
                 .EnableJobServiceEndpoints()
                 .SetEndpointNameFormatter(KebabCaseEndpointNameFormatter.Instance);
 

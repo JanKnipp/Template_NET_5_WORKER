@@ -1,8 +1,9 @@
-﻿namespace Template_NET_5_WORKER.CoreService.Helper
+﻿using System.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
+namespace Template_NET_5_WORKER.CoreService.Helper
 {
-    using System.IO;
-    using System.Text;
-    using System.Text.Json;
     using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Http;
@@ -12,41 +13,16 @@
     {
         public static Task WriteResponse(HttpContext context, HealthReport result)
         {
-            context.Response.ContentType = "application/json; charset=utf-8";
+            var json = new JObject(
+                new JProperty("status", result.Status.ToString()),
+                new JProperty("results", new JObject(result.Entries.Select(entry => new JProperty(entry.Key, new JObject(
+                    new JProperty("status", entry.Value.Status.ToString()),
+                    new JProperty("description", entry.Value.Description),
+                    new JProperty("data", JObject.FromObject(entry.Value.Data))))))));
 
-            var options = new JsonWriterOptions { Indented = true };
+            context.Response.ContentType = "application/json";
 
-            using (var stream = new MemoryStream())
-            {
-                using (var writer = new Utf8JsonWriter(stream, options))
-                {
-                    writer.WriteStartObject();
-                    writer.WriteString("status", result.Status.ToString());
-                    writer.WriteStartObject("results");
-                    foreach (var (key, value) in result.Entries)
-                    {
-                        writer.WriteStartObject(key);
-                        writer.WriteString("status", value.Status.ToString());
-                        writer.WriteString("description", value.Description);
-                        writer.WriteStartObject("data");
-                        foreach (var (s, o) in value.Data)
-                        {
-                            writer.WritePropertyName(s);
-                            JsonSerializer.Serialize(writer, o, o?.GetType() ?? typeof(object));
-                        }
-
-                        writer.WriteEndObject();
-                        writer.WriteEndObject();
-                    }
-
-                    writer.WriteEndObject();
-                    writer.WriteEndObject();
-                }
-
-                var json = Encoding.UTF8.GetString(stream.ToArray());
-
-                return context.Response.WriteAsync(json);
-            }
+            return context.Response.WriteAsync(json.ToString(Formatting.Indented), context.RequestAborted);
         }
     }
 }
