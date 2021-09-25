@@ -1,6 +1,4 @@
-﻿using MassTransit.JobService.Configuration;
-
-namespace Template_NET_5_WORKER.CoreService.Configuration
+﻿namespace Template_NET_5_WORKER.CoreService.Configuration
 {
     using System;
     using System.Reflection;
@@ -11,6 +9,7 @@ namespace Template_NET_5_WORKER.CoreService.Configuration
     using MassTransit;
     using MassTransit.Context;
     using MassTransit.Definition;
+    using MassTransit.JobService.Configuration;
     using MassTransit.RabbitMqTransport;
 
     using Microsoft.AspNetCore.Builder;
